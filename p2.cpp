@@ -11,9 +11,20 @@ int main(int argc,char* argv[]){
 
     ifstream inFile2;
 
-    inFile1.open(argv[3]);
-    inFile2.open(argv[4])
+    inFile1.open(argv[2]);
+    inFile2.open(argv[3);
 
+    if (argv[1] == "i"){
+
+
+
+    }
+
+    if (argv[1] == "s"){
+
+
+        
+    }
 
     return 0;
 }
