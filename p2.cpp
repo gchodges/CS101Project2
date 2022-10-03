@@ -3,10 +3,11 @@
 # include <string>
 #include <cctype>
 #include <cstring>
+#include <climits>
 
 using namespace std;
 
-void Merge(int numbers[], int i, int j, int k) {
+void Merge(int numbers[], int left, int j, int right) {
    int mergedSize;                            // Size of merged partition
    int mergePos;                              // Position to insert merged number
    int leftPos;                               // Position of elements in left partition
@@ -14,14 +15,14 @@ void Merge(int numbers[], int i, int j, int k) {
    int* mergedNumbers = nullptr;
 
    mergePos = 0;
-   mergedSize = k - i + 1;
-   leftPos = i;                               // Initialize left partition position
+   mergedSize = right - left + 1;
+   leftPos = left;                               // Initialize left partition position
    rightPos = j + 1;                          // Initialize right partition position
    mergedNumbers = new int[mergedSize];       // Dynamically allocates temporary array
                                               // for merged numbers
    
    // Add smallest element from left or right partition to merged numbers
-   while (leftPos <= j && rightPos <= k) {
+   while (leftPos <= j && rightPos <= right) {
       if (numbers[leftPos] < numbers[rightPos]) {
          mergedNumbers[mergePos] = numbers[leftPos];
          ++leftPos;
@@ -42,7 +43,7 @@ void Merge(int numbers[], int i, int j, int k) {
    }
    
    // If right partition is not empty, add remaining elements to merged numbers
-   while (rightPos <= k) {
+   while (rightPos <= right) {
       mergedNumbers[mergePos] = numbers[rightPos];
       ++rightPos;
       ++mergePos;
@@ -50,23 +51,23 @@ void Merge(int numbers[], int i, int j, int k) {
    
    // Copy merge number back to numbers
    for (mergePos = 0; mergePos < mergedSize; ++mergePos) {
-      numbers[i + mergePos] = mergedNumbers[mergePos];
+      numbers[left + mergePos] = mergedNumbers[mergePos];
    }
    delete[] mergedNumbers;
 }
 
-void MergeSort(int numbers[], int i, int k) {
+void MergeSort(int numbers[], int left, int right) {
    int j;
    
-   if (i < k) {
-      j = (i + k) / 2;  // Find the midpoint in the partition
+   if (left < right) {
+      j = (left + right) / 2;  // Find the midpoint in the partition
       
       // Recursively sort left and right partitions
-      MergeSort(numbers, i, j);
-      MergeSort(numbers, j + 1, k);
+      MergeSort(numbers, left, j);
+      MergeSort(numbers, j + 1, right);
       
       // Merge left and right partition in sorted order
-      Merge(numbers, i, j, k);
+      Merge(numbers, left, j, right);
    }
 }
 
@@ -93,7 +94,7 @@ void MergeSort(int numbers[], int i, int k) {
 // }
 
 int main(int argc,char* argv[]){
-    cout << "im in main" << endl;
+    //cout << "im in main" << endl;
     ifstream inFile1;
 
     ifstream inFile2;
@@ -101,8 +102,8 @@ int main(int argc,char* argv[]){
     inFile1.open(argv[2]);
     inFile2.open(argv[3]);
 
-    if (argv[1] == "i\0"){
-        cout << "i got here";
+    if (argv[1][0] == 'i'){
+        //cout << "i got here";
         int arr1[20000];
         int arr2[20000];
 
@@ -125,12 +126,15 @@ int main(int argc,char* argv[]){
 
         arr2Size = i;
 
-        MergeSort(arr1,0,arr1Size);
-        MergeSort(arr2,0,arr2Size);
+        MergeSort(arr1,0,arr1Size-1);
+        MergeSort(arr2,0,arr2Size-1);
+
+        int last = INT_MAX;
 
         for (int one = 0; one < arr1Size;one++){
             for (int two = 0;two < arr2Size;two++){
-                if (arr1[one] == arr2[two]){
+                if (arr1[one] == arr2[two] && arr1[one] != last){
+                    last = arr1[one];
                     cout << arr1[one] << endl;
                 }
 
@@ -138,9 +142,22 @@ int main(int argc,char* argv[]){
 
         }
 
-    }
+        // cout << "print sorted lists: " << endl;
 
-    if (argv[1] == "s"){
+        // for (int k = 0; k<arr1Size;k++){
+        //     cout << arr1[k] << endl;
+
+        // }
+        // cout << endl <<endl;
+
+        // for (int k = 0; k<arr2Size;k++){
+        //     cout << arr2[k] << endl;
+
+        // } 
+
+   }
+
+    if (argv[1][0] == 's'){
         cout << " im in string";
         string arr1[20000];
         string arr2[20000];
