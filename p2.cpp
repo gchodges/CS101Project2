@@ -71,6 +71,73 @@ void MergeSort(int numbers[], int left, int right) {
    }
 }
 
+int Partition(string strings[], int i, int k) {
+   int l;
+   int h;
+   int midpoint;
+   string pivot;
+    string temp;
+   bool done;
+   
+   /* Pick middle element as pivot */
+   midpoint = i + (k - i) / 2;
+   pivot = strings[midpoint];
+   
+   done = false;
+   l = i;
+   h = k;
+   
+   while (!done) {
+      
+      /* Increment l while numbers[l] < pivot */
+      while (strings[l] < pivot) {
+         ++l;
+      }
+      
+      /* Decrement h while pivot < numbers[h] */
+      while (pivot < strings[h]) {
+         --h;
+      }
+      
+      /* If there are zero or one elements remaining,
+       all numbers are partitioned. Return h */
+      if (l >= h) {
+         done = true;
+      }
+      else {
+         /* Swap numbers[l] and numbers[h],
+          update l and h */
+         temp = strings[l];
+         strings[l] = strings[h];
+         strings[h] = temp;
+         
+         ++l;
+         --h;
+      }
+   }
+   
+   return h;
+}
+
+void Quicksort(string array[], int i, int k) {
+   int j;
+   
+   /* Base case: If there are 1 or zero elements to sort,
+    partition is already sorted */
+   if (i >= k) {
+      return;
+   }
+   
+   /* Partition the data within the array. Value j returned
+    from partitioning is location of last element in low partition. */
+   j = Partition(array, i, k);
+   
+   /* Recursively sort low partition (i to j) and
+    high partition (j + 1 to k) */
+   Quicksort(array, i, j);
+   Quicksort(array, j + 1, k);
+}
+
 // int main() {
 //    int numbers[] = { 10, 2, 78, 4, 45, 32, 7, 11 };
 //    const int NUMBERS_SIZE = 8;
@@ -102,12 +169,14 @@ int main(int argc,char* argv[]){
     inFile1.open(argv[2]);
     inFile2.open(argv[3]);
 
+    int arr1Size, arr2Size;
+
     if (argv[1][0] == 'i'){
         //cout << "i got here";
         int arr1[20000];
         int arr2[20000];
 
-        int arr1Size, arr2Size;
+        
 
         int i = 0;
 
@@ -158,9 +227,10 @@ int main(int argc,char* argv[]){
    }
 
     if (argv[1][0] == 's'){
-        cout << " im in string";
+        //cout << " im in string";
         string arr1[20000];
         string arr2[20000];
+
 
         int i = 0;
 
@@ -168,14 +238,30 @@ int main(int argc,char* argv[]){
 
             i++;
         }
-
+        arr1Size = i;
         i=0;
 
         while (inFile2 >> arr2[i]){
 
             i++;
         }
+        arr2Size = i;
 
+        Quicksort(arr1,0,arr1Size-1);
+        Quicksort(arr2,0,arr2Size-1);
+
+        string last;
+
+        for (int one = 0; one < arr1Size;one++){
+            for (int two = 0;two < arr2Size;two++){
+                if (arr1[one] == arr2[two] && arr1[one] != last){
+                    last = arr1[one];
+                    cout << arr1[one] << endl;
+                }
+
+            }
+
+        }
 
     }
 
